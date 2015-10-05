@@ -9,11 +9,11 @@ import sys
 flight_file = '2015-MAR-14_First_flight.pf2'
 open_file = open(flight_file, 'r')
 full_file = csv.reader(open_file)
-raw_data = []
-for row in full_file: # Strip out header lines by skipping them
-    for idx in row:
-        match = re.search('^\d', idx) 
-        if match:
+raw_data = [] # Empty array to put each line of the file into
+for row in full_file: # Iterate through each row
+    for idx in row: #Iterate through each element
+        match = re.search('^\d', idx) # Only want lines that start with a digit
+        if match: # Fields found will be added to list
             raw_data.append(row)
 
 flight_data = list(raw_data)
