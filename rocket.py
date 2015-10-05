@@ -2,6 +2,7 @@
 
 import csv
 import matplotlib.pyplot as plt
+import re
 import sys
 
 # Read second column of First_flight.pf2
@@ -10,9 +11,10 @@ open_file = open(flight_file, 'r')
 full_file = csv.reader(open_file)
 raw_data = []
 for row in full_file: # Strip out header lines by skipping them
-    if full_file.line_num <= 15:
-        continue
-    raw_data.append(row)
+    for idx in row:
+        match = re.search('^\d', idx) 
+        if match:
+            raw_data.append(row)
 
 flight_data = list(raw_data)
 alt = [] # Empty array for storing altimeter height readings
@@ -38,3 +40,4 @@ plt.legend()
 plt.title(flight_file)
 plt.show()
 open_file.close()
+sys.exit(0)
