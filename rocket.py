@@ -1,12 +1,22 @@
 #! python3
 
 import csv
+import glob
 import matplotlib.pyplot as plt
 import re
 import sys
+import time
 
-# Read second column of First_flight.pf2
-flight_file = '2015-MAR-14_First_flight.pf2'
+print('Perfectflite files found in current directory:')
+for file in glob.glob('*.pf2'):
+    print('    ' + file)
+while True:
+    flight_file = input('Enter the entire filename that you would like to plot a chart for: ')
+    if os.path.isfile(flight_file):
+        break
+    else:
+        print('File not found. Please make sure that you typed the name correctly!')
+        time.sleep(2)
 open_file = open(flight_file, 'r')
 full_file = csv.reader(open_file)
 raw_data = [] # Empty array to put each line of the file into
