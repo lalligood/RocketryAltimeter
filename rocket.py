@@ -20,12 +20,16 @@ while True:
         time.sleep(2)
         continue
     else:
-        flight_file = file[0]
-        count = 0
+        flight_file = file
+        counter = 0
         for file in glob.glob('*.pf2'):
-            count += 1
-            if count == selection:
-                print('You selected' + flight_file)
+            counter += 1
+            if counter == selection:
+                print('You selected ' + flight_file)
+                break # Break for loop
+        break # Break while loop
+
+# Open the file, parse into arrays, & display chart
 open_file = open(flight_file, 'r')
 full_file = csv.reader(open_file)
 raw_data = [] # Empty array to put each line of the file into
