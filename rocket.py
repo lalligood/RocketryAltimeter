@@ -3,20 +3,29 @@
 import csv
 import glob
 import matplotlib.pyplot as plt
+import os
 import re
 import sys
 import time
 
-print('Perfectflite files found in current directory:')
-for file in glob.glob('*.pf2'):
-    print('    ' + file)
 while True:
-    flight_file = input('Enter the entire filename that you would like to plot a chart for: ')
-    if os.path.isfile(flight_file):
-        break
-    else:
-        print('File not found. Please make sure that you typed the name correctly!')
+    print('Perfectflite files found in current directory (' + os.getcwd() + '):')
+    count = 0
+    for file in glob.glob('*.pf2'):
+        count += 1
+        print('    ' + str(count) + '. ' + file)
+    selection = int(input('Enter the number next of filename that you would like to plot a chart for: '))
+    if selection < 1 or selection > count:
+        print('Invalid selection. Please try again...')
         time.sleep(2)
+        continue
+    else:
+        flight_file = file[0]
+        count = 0
+        for file in glob.glob('*.pf2'):
+            count += 1
+            if count == selection:
+                print('You selected' + flight_file)
 open_file = open(flight_file, 'r')
 full_file = csv.reader(open_file)
 raw_data = [] # Empty array to put each line of the file into
