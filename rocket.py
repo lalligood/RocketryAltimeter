@@ -16,8 +16,12 @@ def select_flight():
         for file in glob.glob('*.pf2'):
             count += 1
             print('    ' + str(count) + '. ' + file)
-        selection = int(input('Enter the number next of filename that you would like to plot a chart for: '))
-        if selection < 1 or selection > count:
+        selection = input('Enter the number next to filename that you would like to plot a chart for: ')
+        if not selection.isnumeric():
+            print('Invalid selection. Please try again...')
+            time.sleep(2)
+            continue
+        elif int(selection) < 1 or int(selection) > count:
             print('Invalid selection. Please try again...')
             time.sleep(2)
             continue
@@ -26,11 +30,11 @@ def select_flight():
             counter = 0
             for file in glob.glob('*.pf2'):
                 counter += 1
-                if counter == selection:
+                if counter == int(selection):
                     print('You selected ' + flight_file)
                     return flight_file
                     break # Break for loop
-            break # Break while loop
+                break # Break while loop
 
 def parse_file(flight_file):
     'Open the file, read data in, & parse into arrays'
@@ -67,5 +71,5 @@ plt.plot(t, b, label='Battery Voltage (V)')
 plt.legend()
 plt.title(my_flight)
 plt.show()
-open_file.close()
+my_flight.close()
 sys.exit(0)
