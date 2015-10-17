@@ -16,8 +16,12 @@ def select_flight():
         for file in glob.glob('*.pf2'):
             count += 1
             print('    ' + str(count) + '. ' + file)
-        selection = input('Enter the number next to filename that you would like to plot a chart for: ')
-        if not selection.isnumeric():
+            print('    X. Exit')
+        selection = input('Enter the number of the file you want to plot or exit: ')
+        if selection.lower() == 'x':
+            print('Exiting Rocket Flight Plotter...')
+            sys.exit(0)
+        elif not selection.isnumeric():
             print('Invalid selection. Please try again...')
             time.sleep(2)
             continue
@@ -63,13 +67,13 @@ def parse_file(flight_file):
     return alti, time, velo, temp, volt
 
 # MAIN ROUTINE
-my_flight = select_flight()
-a, t, s, d, b = parse_file(my_flight)
-plt.plot(t, a, label='Altitude(ft)')
-plt.plot(t, s, label='Velocity (ft/sec)')
-plt.plot(t, d, label='Ambient temp (F)')
-plt.plot(t, b, label='Battery Voltage (V)')
-plt.legend()
-plt.title(my_flight)
-plt.show()
-sys.exit(0)
+while True:
+    my_flight = select_flight()
+    a, t, s, d, b = parse_file(my_flight)
+    plt.plot(t, a, label='Altitude(ft)')
+    plt.plot(t, s, label='Velocity (ft/sec)')
+    plt.plot(t, d, label='Ambient temp (F)')
+    plt.plot(t, b, label='Battery Voltage (V)')
+    plt.legend()
+    plt.title(my_flight)
+    plt.show()
