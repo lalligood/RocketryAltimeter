@@ -59,6 +59,7 @@ def parse_file(flight_file):
         velo.append(flight_data[x][2])
         temp.append(flight_data[x][3])
         volt.append(flight_data[x][4])
+    open_file.close()
     return alti, time, velo, temp, volt
 
 # MAIN ROUTINE
@@ -71,5 +72,4 @@ plt.plot(t, b, label='Battery Voltage (V)')
 plt.legend()
 plt.title(my_flight)
 plt.show()
-my_flight.close()
 sys.exit(0)
