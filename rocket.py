@@ -70,8 +70,20 @@ def parse_file(flight_file):
 while True:
     my_flight = select_flight()
     a, t, s, d, b = parse_file(my_flight)
+
+    # Show altitude
     plt.plot(t, a, label='Altitude(ft)')
+    plt.legend()
+    plt.title(my_flight)
+    plt.show()
+
+    # Show velocity
     plt.plot(t, s, label='Velocity (ft/sec)')
+    plt.legend()
+    plt.title(my_flight)
+    plt.show()
+
+    # Show temperature & battery voltage
     plt.plot(t, d, label='Ambient temp (F)')
     plt.plot(t, b, label='Battery Voltage (V)')
     plt.legend()
