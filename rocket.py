@@ -16,7 +16,7 @@ def select_flight():
         for file in glob.glob('*.pf2'):
             count += 1
             print('    ' + str(count) + '. ' + file)
-            print('    X. Exit')
+        print('    X. Exit')
         selection = input('Enter the number of the file you want to plot or exit: ')
         if selection.lower() == 'x':
             print('Exiting Rocket Flight Plotter...')
@@ -70,6 +70,7 @@ def parse_file(flight_file):
 while True:
     my_flight = select_flight()
     a, t, s, d, b = parse_file(my_flight)
+    print('Peak altitude: ' + max(int(ht) for ht in a))
 
     # Show altitude
     plt.plot(t, a, label='Altitude(ft)')
