@@ -11,7 +11,8 @@ import time
 def select_flight():
     'Lists all .pf2 files in currently directory & prompts user to select one.'
     while True:
-        print('Perfectflite files found in current directory (' + os.getcwd() + '):')
+        print('Current directory is: ' + os.getcwd())
+        print('Perfectflite files found:')
         count = 0
         for file in glob.glob('*.pf2'):
             count += 1
@@ -70,7 +71,10 @@ def parse_file(flight_file):
 while True:
     my_flight = select_flight()
     a, t, s, d, b = parse_file(my_flight)
-    print('Peak altitude: ' + max(int(ht) for ht in a))
+    print('Peak altitude: ' + str(max(int(ht) for ht in a)) + 'ft')
+    print('Maximum velocity: ' + str(max(int(spd) for spd in s)) + 'ft/sec')
+    print('Average temperature: ' + str(sum(float(deg) for deg in d) / len(d)) + ' degrees F')
+    print('Minimum voltage: ' + str(min(float(bat) for bat in b)) + 'V')
 
     # Show altitude
     plt.plot(t, a, label='Altitude(ft)')
