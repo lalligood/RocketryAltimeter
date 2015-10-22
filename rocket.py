@@ -1,4 +1,4 @@
-#! python3
+#!/usr/bin/python3
 
 import csv
 import glob
@@ -11,13 +11,14 @@ import time
 def select_flight():
     'Lists all .pf2 files in currently directory & prompts user to select one.'
     while True:
-        print('Current directory is: ' + os.getcwd())
-        print('Perfectflite files found:')
+        print('''Current directory is:
+\t{}
+Perfectflite files found:'''.format(os.getcwd()))
         count = 0
-        for file in glob.glob('*.pf2'):
+        for files in glob.glob('*.pf2'):
             count += 1
-            print('    ' + str(count) + '. ' + file)
-        print('    X. Exit')
+            print('\t{}. {}'.format(count, files))
+        print('\tX. Exit')
         selection = input('Enter the number of the file you want to plot or exit: ')
         if selection.lower() == 'x':
             print('Exiting Rocket Flight Plotter...')
@@ -31,12 +32,12 @@ def select_flight():
             time.sleep(2)
             continue
         else:
-            flight_file = file
+            flight_file = files
             counter = 0
-            for file in glob.glob('*.pf2'):
+            for files in glob.glob('*.pf2'):
                 counter += 1
                 if counter == int(selection):
-                    print('You selected ' + flight_file)
+                    print('You selected {}'.format(flight_file))
                     return flight_file
                     break # Break for loop
                 break # Break while loop
@@ -75,10 +76,10 @@ while True:
     max_velo = max(int(spd) for spd in s)
     avg_temp = round(sum(float(deg) for deg in d) / len(d), 1)
     min_volt = min(float(bat) for bat in b)
-    print('Peak altitude: {}ft'.format(peak_alt))
-    print('Maximum velocity: {}ft/sec'.format(max_velo))
-    print('Average temperature: {} degrees F'.format(avg_temp))
-    print('Minimum voltage: {}V'.format(min_volt))
+    print('Maximum altitude:\t{}ft'.format(peak_alt))
+    print('Maximum velocity:\t{}ft/sec'.format(max_velo))
+    print('Average temperature:\t{} degrees F'.format(avg_temp))
+    print('Minimum voltage:\t{}V'.format(min_volt))
 
     # Show altitude
     plt.plot(t, a, label='Altitude(ft)')
