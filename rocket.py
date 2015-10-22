@@ -76,26 +76,30 @@ while True:
     max_velo = max(int(spd) for spd in s)
     avg_temp = round(sum(float(deg) for deg in d) / len(d), 1)
     min_volt = min(float(bat) for bat in b)
-    print('Maximum altitude:\t{}ft'.format(peak_alt))
-    print('Maximum velocity:\t{}ft/sec'.format(max_velo))
-    print('Average temperature:\t{} degrees F'.format(avg_temp))
-    print('Minimum voltage:\t{}V'.format(min_volt))
+    print('Maximum altitude:    {}ft'.format(peak_alt))
+    print('Maximum velocity:    {}ft/sec'.format(max_velo))
+    print('Average temperature: {} degrees F'.format(avg_temp))
+    print('Minimum voltage:     {}V'.format(min_volt))
 
     # Show altitude
+    altitude = plt.figure()
     plt.plot(t, a, label='Altitude(ft)')
     plt.legend()
     plt.title(my_flight)
-    plt.show()
+    altitude.canvas.set_window_title('Altitude Profile')
 
     # Show velocity
+    velocity = plt.figure()
     plt.plot(t, s, label='Velocity (ft/sec)')
     plt.legend()
     plt.title(my_flight)
-    plt.show()
+    velocity.canvas.set_window_title('Flight Velocity')
 
     # Show temperature & battery voltage
+    tempvolt = plt.figure()
     plt.plot(t, d, label='Ambient temp (F)')
     plt.plot(t, b, label='Battery Voltage (V)')
     plt.legend()
     plt.title(my_flight)
+    tempvolt.canvas.set_window_title('Temperature and Voltage')
     plt.show()
