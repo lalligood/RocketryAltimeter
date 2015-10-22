@@ -71,10 +71,14 @@ def parse_file(flight_file):
 while True:
     my_flight = select_flight()
     a, t, s, d, b = parse_file(my_flight)
-    print('Peak altitude: ' + str(max(int(ht) for ht in a)) + 'ft')
-    print('Maximum velocity: ' + str(max(int(spd) for spd in s)) + 'ft/sec')
-    print('Average temperature: ' + str(sum(float(deg) for deg in d) / len(d)) + ' degrees F')
-    print('Minimum voltage: ' + str(min(float(bat) for bat in b)) + 'V')
+    peak_alt = max(int(ht) for ht in a)
+    max_velo = max(int(spd) for spd in s)
+    avg_temp = round(sum(float(deg) for deg in d) / len(d), 1)
+    min_volt = min(float(bat) for bat in b)
+    print('Peak altitude: {}ft'.format(peak_alt))
+    print('Maximum velocity: {}ft/sec'.format(max_velo))
+    print('Average temperature: {} degrees F'.format(avg_temp))
+    print('Minimum voltage: {}V'.format(min_volt))
 
     # Show altitude
     plt.plot(t, a, label='Altitude(ft)')
