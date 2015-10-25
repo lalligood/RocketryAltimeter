@@ -8,6 +8,11 @@ import re
 import sys
 import time
 
+def errmsgslow(text):
+    'Prints message to screen then pauses for 2 seconds.'
+    print(text)
+    time.sleep(2)
+
 def select_flight():
     'Lists all .pf2 files in currently directory & prompts user to select one.'
     while True:
@@ -24,12 +29,10 @@ Perfectflite files found:'''.format(os.getcwd()))
             print('Exiting Rocket Flight Plotter...')
             sys.exit(0)
         elif not selection.isnumeric():
-            print('Invalid selection. Please try again...')
-            time.sleep(2)
+            errmsgslow('Invalid selection. Please try again...')
             continue
         elif int(selection) < 1 or int(selection) > count:
-            print('Invalid selection. Please try again...')
-            time.sleep(2)
+            errmsgslow('Invalid selection. Please try again...')
             continue
         else:
             flight_file = files
@@ -46,7 +49,7 @@ def parse_file(flight_file):
     'Open the file, read data in, & parse into arrays'
     open_file = open(flight_file, 'r')
     full_file = csv.reader(open_file)
-    raw_data = [] # Empty array to put each line of the file into
+    raw_data = [] # Empty list to put each line of the file into
     for row in full_file: # Iterate through each row
         for idx in row: #Iterate through each element
             match = re.search('^\d', idx) # Only want lines starting with digit
@@ -54,17 +57,17 @@ def parse_file(flight_file):
                 raw_data.append(row)
     flight_data = list(raw_data)
     # Create 5 empty arrays
-    alti = [] # For altimeter height readings
-    time = [] # For flight time readings
-    velo = [] # For velocity readings
-    temp = [] # For ambient temperature readings
-    volt = [] # For battery voltage readings
+    alti = []
+    time = []
+    velo = []
+    temp = []
+    volt = []
     for x in range(len(flight_data)):
-        time.append(flight_data[x][0])
-        alti.append(flight_data[x][1])
-        velo.append(flight_data[x][2])
-        temp.append(flight_data[x][3])
-        volt.append(flight_data[x][4])
+        time.append(flight_data[x][0]) # For flight time readings
+        alti.append(flight_data[x][1]) # For altimeter height readings
+        velo.append(flight_data[x][2]) # For velocity readings
+        temp.append(flight_data[x][3]) # For ambient temperature readings
+        volt.append(flight_data[x][4]) # For battery voltage readings
     open_file.close()
     return alti, time, velo, temp, volt
 
@@ -86,14 +89,14 @@ while True:
     plt.plot(t, a, label='Altitude(ft)')
     plt.legend()
     plt.title(my_flight)
-    altitude.canvas.set_window_title('Altitude Profile')
+    altitude.canvas.set_window_title('Altitude Profile for ' + my_flight)
 
     # Show velocity
     velocity = plt.figure()
     plt.plot(t, s, label='Velocity (ft/sec)')
     plt.legend()
     plt.title(my_flight)
-    velocity.canvas.set_window_title('Flight Velocity')
+    velocity.canvas.set_window_title('Flight Velocity for ' + my_flight)
 
     # Show temperature & battery voltage
     tempvolt = plt.figure()
@@ -101,5 +104,5 @@ while True:
     plt.plot(t, b, label='Battery Voltage (V)')
     plt.legend()
     plt.title(my_flight)
-    tempvolt.canvas.set_window_title('Temperature and Voltage')
+    tempvolt.canvas.set_window_title('Temperature and Voltage for ' + my_flight)
     plt.show()
