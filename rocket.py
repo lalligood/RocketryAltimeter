@@ -47,8 +47,9 @@ Perfectflite files found:'''.format(os.getcwd()))
 
 class Measurement:
     def __init__(self, unit):
-        'Comment goes here'
-        measure = []
+        '''Initialize an empty list to store measurements.
+        Units measure the values in list.'''
+        self.measure = []
         self.unit = unit
 
     def max(self, measure):
@@ -61,7 +62,7 @@ class Measurement:
 
     def avg(self, measure):
         'Return average value in the list'
-        return round(sum(float(meas) for meas in measure) / (len(measure), 1)
+        return round(sum(float(meas) for meas in measure) / (len(measure), 1))
 
 def parse_file(flight_file):
     'Open the file, read data in, & parse into arrays'
@@ -81,22 +82,22 @@ def parse_file(flight_file):
     temp = Measurement('Temperature (degrees F)')
     volt = Measurement('Voltage (V)')
     for x in range(len(flight_data)):
-        time.append(flight_data[x][0]) # For flight time readings
-        alti.append(flight_data[x][1]) # For altimeter height readings
-        velo.append(flight_data[x][2]) # For velocity readings
-        temp.append(flight_data[x][3]) # For ambient temperature readings
-        volt.append(flight_data[x][4]) # For battery voltage readings
+        time.measure.append(flight_data[x][0]) # For flight time readings
+        alti.measure.append(flight_data[x][1]) # For altimeter height readings
+        velo.measure.append(flight_data[x][2]) # For velocity readings
+        temp.measure.append(flight_data[x][3]) # For ambient temperature readings
+        volt.measure.append(flight_data[x][4]) # For battery voltage readings
     open_file.close()
     return alti, time, velo, temp, volt
 
 # MAIN ROUTINE
 while True:
     my_flight = select_flight()
-    a, t, s, d, b = parse_file(my_flight)
-    peak_alt = max(int(ht) for ht in a)
-    max_velo = max(int(spd) for spd in s)
-    avg_temp = round(sum(float(deg) for deg in d) / len(d), 1)
-    min_volt = min(float(bat) for bat in b)
+    alti, time, velo, temp, volt = parse_file(my_flight)
+    peak_alt = alti.max(alti.measure)
+    max_velo = velo.max(velo.measure)
+    avg_temp = temp.avg(temp.measure)
+    min_volt = volt.min(volt.measure)
     print('Maximum altitude:    {}ft'.format(peak_alt))
     print('Maximum velocity:    {}ft/sec'.format(max_velo))
     print('Average temperature: {} degrees F'.format(avg_temp))
@@ -104,22 +105,22 @@ while True:
 
     # Show altitude
     altitude = plt.figure()
-    plt.plot(t, a, label='Altitude(ft)')
+    plt.plot(time, alti, label=alti.unit)
     plt.legend()
     plt.title(my_flight)
     altitude.canvas.set_window_title('Altitude Profile for ' + my_flight)
 
     # Show velocity
     velocity = plt.figure()
-    plt.plot(t, s, label='Velocity (ft/sec)')
+    plt.plot(time, velo, label=velo.unit)
     plt.legend()
     plt.title(my_flight)
     velocity.canvas.set_window_title('Flight Velocity for ' + my_flight)
 
     # Show temperature & battery voltage
     tempvolt = plt.figure()
-    plt.plot(t, d, label='Ambient temp (F)')
-    plt.plot(t, b, label='Battery Voltage (V)')
+    plt.plot(time, temp label=temp.unit)
+    plt.plot(time, volt, label=volt.unit)
     plt.legend()
     plt.title(my_flight)
     tempvolt.canvas.set_window_title('Temperature and Voltage for ' + my_flight)
