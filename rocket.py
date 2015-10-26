@@ -45,6 +45,24 @@ Perfectflite files found:'''.format(os.getcwd()))
                     break # Break for loop
                 break # Break while loop
 
+class Measurement:
+    def __init__(self, unit):
+        'Comment goes here'
+        measure = []
+        self.unit = unit
+
+    def max(self, measure):
+        'Return maximum value in the list'
+        return max(int(meas) for meas in measure)
+
+    def min(self, measure):
+        'Return minimum value in the list'
+        return min(int(meas) for meas in measure)
+
+    def avg(self, measure):
+        'Return average value in the list'
+        return round(sum(float(meas) for meas in measure) / (len(measure), 1)
+
 def parse_file(flight_file):
     'Open the file, read data in, & parse into arrays'
     open_file = open(flight_file, 'r')
@@ -53,15 +71,15 @@ def parse_file(flight_file):
     for row in full_file: # Iterate through each row
         for idx in row: #Iterate through each element
             match = re.search('^\d', idx) # Only want lines starting with digit
-            if match: # Fields found will be added to list
+            if match and len(row) == 5: # Fields found will be added to list
                 raw_data.append(row)
     flight_data = list(raw_data)
     # Create 5 empty arrays
-    alti = []
-    time = []
-    velo = []
-    temp = []
-    volt = []
+    alti = Measurement('Altitude (ft)')
+    time = Measurement('Time (sec)')
+    velo = Measurement('Velocity (ft/sec)')
+    temp = Measurement('Temperature (degrees F)')
+    volt = Measurement('Voltage (V)')
     for x in range(len(flight_data)):
         time.append(flight_data[x][0]) # For flight time readings
         alti.append(flight_data[x][1]) # For altimeter height readings
