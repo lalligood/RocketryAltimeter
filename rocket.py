@@ -8,6 +8,39 @@ import re
 import sys
 import time
 
+class Measurement:
+    def __init__(self, unit, title):
+        '''Initialize an empty list to store measurements.
+        Units measure the values in list.'''
+        self.measure = []
+        self.unit = unit
+        self.title = title
+
+    def max(self):
+        'Return maximum value in the list'
+        return max(int(meas) for meas in self.measure)
+
+    def min(self):
+        'Return minimum value in the list'
+        return round(min(float(meas) for meas in self.measure), 2)
+
+    def avg(self):
+        'Return average value in the list'
+        return round(sum(float(meas) for meas in self.measure) / (len(self.measure)), 1)
+
+class ChartElement:
+    def __init__(self, x, y, legend, plot_file, title):
+        'Gather all elements necessary to plot a chart'
+        self.x = x
+        self.y = y
+        self.legend = legend
+        self.plot_file = plot_file
+        self.title = title
+        plt.figure().canvas.set_window_title(self.title + ' for ' + self.plot_file)
+        plt.plot(self.x, self.y, label=self.legend)
+        plt.legend()
+        plt.title(self.plot_file)
+
 def errmsgslow(text):
     'Prints message to screen then pauses for 2 seconds.'
     print(text)
@@ -45,25 +78,6 @@ Perfectflite files found:'''.format(os.getcwd()))
                     break # Break for loop
                 break # Break while loop
 
-class Measurement:
-    def __init__(self, unit):
-        '''Initialize an empty list to store measurements.
-        Units measure the values in list.'''
-        self.measure = []
-        self.unit = unit
-
-    def max(self, measure):
-        'Return maximum value in the list'
-        return max(int(meas) for meas in measure)
-
-    def min(self, measure):
-        'Return minimum value in the list'
-        return round(min(float(meas) for meas in measure), 2)
-
-    def avg(self, measure):
-        'Return average value in the list'
-        return round(sum(float(meas) for meas in measure) / (len(measure)), 1)
-
 def parse_file(flight_file):
     'Open the file, read data in, & parse into arrays'
     open_file = open(flight_file, 'r')
@@ -76,11 +90,11 @@ def parse_file(flight_file):
                 raw_data.append(row)
     flight_data = list(raw_data)
     # Create 5 empty arrays
-    alti = Measurement('Altitude (ft)')
-    time = Measurement('Time (sec)')
-    velo = Measurement('Velocity (ft/sec)')
-    temp = Measurement('Temperature (degrees F)')
-    volt = Measurement('Voltage (V)')
+    alti = Measurement('Altitude (ft)', 'Altitude Profile')
+    time = Measurement('Time (sec)', '')
+    velo = Measurement('Velocity (ft/sec)', 'Flight Velocity')
+    temp = Measurement('Temperature (degrees F)', 'Ambient Temperature')
+    volt = Measurement('Voltage (V)', 'Battery Voltage')
     for x in range(len(flight_data)):
         time.measure.append(flight_data[x][0]) # For flight time readings
         alti.measure.append(flight_data[x][1]) # For altimeter height readings
@@ -94,32 +108,22 @@ def parse_file(flight_file):
 while True:
     my_flight = select_flight()
     alti, time, velo, temp, volt = parse_file(my_flight)
-    print('Maximum {}: {}'.format(alti.unit, alti.max(alti.measure)))
-    print('Maximum {}: {}'.format(velo.unit, velo.max(velo.measure)))
-    print('Average {}: {}'.format(temp.unit, temp.avg(temp.measure)))
-    print('Minimum {}: {}'.format(volt.unit, volt.min(volt.measure)))
+    print('Maximum {}: {}'.format(alti.unit, alti.max()))
+    print('Maximum {}: {}'.format(velo.unit, velo.max()))
+    print('Average {}: {}'.format(temp.unit, temp.avg()))
+    print('Minimum {}: {}'.format(volt.unit, volt.min()))
 
     # Plot altitude
-    altitude = plt.figure()
-    plt.plot(time.measure, alti.measure, label=alti.unit)
-    plt.legend()
-    plt.title(my_flight)
-    altitude.canvas.set_window_title('Altitude Profile for ' + my_flight)
+    altitude = ChartElement(time.measure, alti.measure, alti.unit, my_flight, alti.title)
 
     # Plot velocity
-    velocity = plt.figure()
-    plt.plot(time.measure, velo.measure, label=velo.unit)
-    plt.legend()
-    plt.title(my_flight)
-    velocity.canvas.set_window_title('Flight Velocity for ' + my_flight)
+    velocity = ChartElement(time.measure, velo.measure, velo.unit, my_flight, velo.title)
 
-    # Plot temperature & battery voltage
-    tempvolt = plt.figure()
-    plt.plot(time.measure, temp.measure, label=temp.unit)
-    plt.plot(time.measure, volt.measure, label=volt.unit)
-    plt.legend()
-    plt.title(my_flight)
-    tempvolt.canvas.set_window_title('Temperature and Voltage for ' + my_flight)
+    # Plot temperature
+    temperature = ChartElement(time.measure, temp.measure, temp.unit, my_flight, temp.title)
+
+    # Plot battery voltage
+    voltage = ChartElement(time.measure, volt.measure, volt.unit, my_flight, volt.title)
 
     # Display plot windows
     plt.show()
