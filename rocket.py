@@ -58,21 +58,21 @@ class Measurement:
 
     def min(self, measure):
         'Return minimum value in the list'
-        return min(int(meas) for meas in measure)
+        return round(min(float(meas) for meas in measure), 2)
 
     def avg(self, measure):
         'Return average value in the list'
-        return round(sum(float(meas) for meas in measure) / (len(measure), 1))
+        return round(sum(float(meas) for meas in measure) / (len(measure)), 1)
 
 def parse_file(flight_file):
     'Open the file, read data in, & parse into arrays'
     open_file = open(flight_file, 'r')
     full_file = csv.reader(open_file)
     raw_data = [] # Empty list to put each line of the file into
-    for row in full_file: # Iterate through each row
-        for idx in row: #Iterate through each element
+    for row in full_file:
+        for idx in row:
             match = re.search('^\d', idx) # Only want lines starting with digit
-            if match and len(row) == 5: # Fields found will be added to list
+            if match and len(row) == 5:
                 raw_data.append(row)
     flight_data = list(raw_data)
     # Create 5 empty arrays
@@ -94,34 +94,32 @@ def parse_file(flight_file):
 while True:
     my_flight = select_flight()
     alti, time, velo, temp, volt = parse_file(my_flight)
-    peak_alt = alti.max(alti.measure)
-    max_velo = velo.max(velo.measure)
-    avg_temp = temp.avg(temp.measure)
-    min_volt = volt.min(volt.measure)
-    print('Maximum altitude:    {}ft'.format(peak_alt))
-    print('Maximum velocity:    {}ft/sec'.format(max_velo))
-    print('Average temperature: {} degrees F'.format(avg_temp))
-    print('Minimum voltage:     {}V'.format(min_volt))
+    print('Maximum {}: {}'.format(alti.unit, alti.max(alti.measure)))
+    print('Maximum {}: {}'.format(velo.unit, velo.max(velo.measure)))
+    print('Average {}: {}'.format(temp.unit, temp.avg(temp.measure)))
+    print('Minimum {}: {}'.format(volt.unit, volt.min(volt.measure)))
 
-    # Show altitude
+    # Plot altitude
     altitude = plt.figure()
-    plt.plot(time, alti, label=alti.unit)
+    plt.plot(time.measure, alti.measure, label=alti.unit)
     plt.legend()
     plt.title(my_flight)
     altitude.canvas.set_window_title('Altitude Profile for ' + my_flight)
 
-    # Show velocity
+    # Plot velocity
     velocity = plt.figure()
-    plt.plot(time, velo, label=velo.unit)
+    plt.plot(time.measure, velo.measure, label=velo.unit)
     plt.legend()
     plt.title(my_flight)
     velocity.canvas.set_window_title('Flight Velocity for ' + my_flight)
 
-    # Show temperature & battery voltage
+    # Plot temperature & battery voltage
     tempvolt = plt.figure()
-    plt.plot(time, temp label=temp.unit)
-    plt.plot(time, volt, label=volt.unit)
+    plt.plot(time.measure, temp.measure, label=temp.unit)
+    plt.plot(time.measure, volt.measure, label=volt.unit)
     plt.legend()
     plt.title(my_flight)
     tempvolt.canvas.set_window_title('Temperature and Voltage for ' + my_flight)
+
+    # Display plot windows
     plt.show()
