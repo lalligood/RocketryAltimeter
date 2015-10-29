@@ -117,6 +117,7 @@ def main():
         parse_file(my_flight, alti, time, velo, temp, volt)
 
         # Display basic statistics about flight
+        time.max()
         alti.max()
         velo.max()
         temp.avg()
