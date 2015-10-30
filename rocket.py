@@ -41,7 +41,8 @@ class ChartElement:
         self.title = title
         plt.figure().canvas.set_window_title(self.title + ' for ' + self.plot_file)
         plt.plot(self.x, self.y, label=self.legend)
-        plt.legend()
+        plt.xlabel('Time (sec)')
+        plt.ylabel(self.legend)
         plt.title(self.plot_file)
 
 def errmsgslow(text):
