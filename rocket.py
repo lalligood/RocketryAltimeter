@@ -82,9 +82,9 @@ Perfectflite files found:'''.format(os.getcwd()))
                     break # Break for loop
                 break # Break while loop
 
-def parse_file(flight_file, height, seconds, speed, heat, power):
+def parse_file(input_file, col0, col1, col2, col3, col4):
     'Open the file, read data in, & parse into arrays'
-    open_file = open(flight_file, 'r')
+    open_file = open(input_file, 'r')
     full_file = csv.reader(open_file)
     raw_data = [] # Empty list to put each line of the file into
     for row in full_file:
@@ -94,11 +94,11 @@ def parse_file(flight_file, height, seconds, speed, heat, power):
                 raw_data.append(row)
     flight_data = list(raw_data)
     for x in range(len(flight_data)):
-        seconds.measure.append(flight_data[x][0]) # For flight time readings
-        height.measure.append(flight_data[x][1]) # For altimeter height readings
-        speed.measure.append(flight_data[x][2]) # For velocity readings
-        heat.measure.append(flight_data[x][3]) # For ambient temperature readings
-        power.measure.append(flight_data[x][4]) # For battery voltage readings
+        col0.measure.append(flight_data[x][0])
+        col1.measure.append(flight_data[x][1])
+        col2.measure.append(flight_data[x][2])
+        col3.measure.append(flight_data[x][3])
+        col4.measure.append(flight_data[x][4])
     open_file.close()
 
 def main():
@@ -108,14 +108,14 @@ def main():
         my_flight = select_flight()
 
         # Initialize variables to hold measurements
-        alti = Measurement('Altitude (ft)', 'Altitude Profile')
         time = Measurement('Time (sec)', '')
+        alti = Measurement('Altitude (ft)', 'Altitude Profile')
         velo = Measurement('Velocity (ft/sec)', 'Flight Velocity')
         temp = Measurement('Temperature (degrees F)', 'Ambient Temperature')
         volt = Measurement('Voltage (V)', 'Battery Voltage')
 
         # Parse file & populate variables
-        parse_file(my_flight, alti, time, velo, temp, volt)
+        parse_file(my_flight, time, alti, velo, temp, volt)
 
         # Display basic statistics about flight
         time.max()
