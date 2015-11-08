@@ -82,7 +82,7 @@ Perfectflite files found:'''.format(os.getcwd()))
                     break # Break for loop
                 break # Break while loop
 
-def parse_file(input_file, col0, col1, col2='', col3='', col4=''):
+def parse_file(input_file, col0, col1, col2='0', col3='0', col4='0'):
     'Open the file, read data in, & parse into arrays'
     open_file = open(input_file, 'r')
     full_file = csv.reader(open_file)
@@ -92,16 +92,17 @@ def parse_file(input_file, col0, col1, col2='', col3='', col4=''):
             match = re.search('^\d', idx) # Only want lines starting with digit
             if match and len(row) > 2:
                 raw_data.append(row)
+            row_len = len(row)
     flight_data = list(raw_data)
     for x in range(len(flight_data)):
         col0.measure.append(flight_data[x][0])
         col1.measure.append(flight_data[x][1])
-        # Error handler to suppress any missing indexes goes here
-        col2.measure.append(flight_data[x][2])
-        # Error handler to suppress any missing indexes goes here
-        col3.measure.append(flight_data[x][3])
-        # Error handler to suppress any missing indexes goes here
-        col4.measure.append(flight_data[x][4])
+        if row_len == 3:
+            col2.measure.append(flight_data[x][2])
+        if row_len == 4:
+            col3.measure.append(flight_data[x][3])
+        if row_len == 5:
+            col4.measure.append(flight_data[x][4])
     open_file.close()
 
 def main():
