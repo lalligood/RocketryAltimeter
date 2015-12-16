@@ -94,7 +94,7 @@ def parse_file(input_file, col0, col1, col2='0', col3='0', col4='0'):
                 raw_data.append(row)
             row_len = len(row)
     flight_data = list(raw_data)
-    for x in range(len(flight_data)):
+    for x in enumerate(flight_data):
         col0.measure.append(flight_data[x][0])
         col1.measure.append(flight_data[x][1])
         if row_len == 3:
