@@ -70,7 +70,11 @@ Perfectflite files found:'''.format(os.getcwd()))
             count += 1
             print('\t{}. {}'.format(count, files))
         print('\t0. Exit')
-        selection = int(input('Enter the number of the file you want to plot or exit: '))
+        try:
+            selection = int(input('Enter the number of the file you want to plot or exit: '))
+        except ValueError:
+            errmsgslow('Invalid selection. Please try again...')
+            continue
         if selection == 0:
             print('Exiting Rocket Flight Plotter...')
             sys.exit(0)
@@ -110,6 +114,7 @@ def parse_file(input_file, col0, col1, col2='0', col3='0', col4='0'):
         if row_len == 5:
             col4.measure.append(flight_data[x][4])
     open_file.close()
+    return row_len
 
 def main():
     'Main routine for selecting file, parsing the data, & displaying charts.'
@@ -123,21 +128,24 @@ def main():
         temp = Measurement('Temperature (degrees F)', 'Ambient Temperature')
         volt = Measurement('Voltage (V)', 'Battery Voltage')
         # Parse file & populate variables
-        parse_file(my_flight, time, alti, velo, temp, volt)
+        colcount = parse_file(my_flight, time, alti, velo, temp, volt)
         # Display basic statistics about flight
         time.max()
         alti.max()
-        velo.max()
-        temp.avg()
-        volt.min()
         # Plot altitude
         altitude = ChartElement(time.measure, alti.measure, alti.unit, my_flight, alti.title)
-        # Plot velocity
-        velocity = ChartElement(time.measure, velo.measure, velo.unit, my_flight, velo.title)
-        # Plot temperature
-        temperature = ChartElement(time.measure, temp.measure, temp.unit, my_flight, temp.title)
-        # Plot battery voltage
-        voltage = ChartElement(time.measure, volt.measure, volt.unit, my_flight, volt.title)
+        if colcount >= 3:
+            velo.max()
+            # Plot velocity
+            velocity = ChartElement(time.measure, velo.measure, velo.unit, my_flight, velo.title)
+        if colcount >= 4:
+            temp.avg()
+            # Plot temperature
+            temperature = ChartElement(time.measure, temp.measure, temp.unit, my_flight, temp.title)
+        if colcount >= 5:
+            volt.min()
+            # Plot battery voltage
+            voltage = ChartElement(time.measure, volt.measure, volt.unit, my_flight, volt.title)
         # Display plot windows
         plt.show()
 
