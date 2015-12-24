@@ -8,6 +8,11 @@ import re
 import sys
 import time
 
+__author__ = 'Lance Alligood'
+__email__ = 'lalligood@gmail.com'
+__version__ = '1.0'
+__status__ = 'Production'
+
 class Measurement:
     def __init__(self, unit, title):
         '''Initialize an empty list to store measurements.
@@ -66,9 +71,9 @@ def select_flight():
 \t{}
 Perfectflite files found:'''.format(os.getcwd()))
         count = 0
-        for files in glob.glob('*.pf2'):
+        for filename in glob.glob('*.pf2'):
             count += 1
-            print('\t{}. {}'.format(count, files))
+            print('\t{}. {}'.format(count, filename))
         print('\t0. Exit')
         try:
             selection = int(input('Enter the number of the file you want to plot or exit: '))
@@ -82,15 +87,13 @@ Perfectflite files found:'''.format(os.getcwd()))
             errmsgslow('Invalid selection. Please try again...')
             continue
         else:
-            flight_file = files
+            #flight_file = files
             counter = 0
-            for files in glob.glob('*.pf2'):
+            for filename in glob.glob('*.pf2'):
                 counter += 1
                 if counter == selection:
-                    print('You selected {}'.format(flight_file))
-                    return flight_file
-                    break # Break for loop
-                break # Break while loop
+                    print('You selected {}'.format(filename))
+                    return filename
 
 def parse_file(input_file, col0, col1, col2='0', col3='0', col4='0'):
     'Open the file, read data in, & parse into arrays'
